@@ -1,0 +1,46 @@
+name: APK derle
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Derle
+        run: |
+          cat > setup-deps.js <<'EOS'
+          const { execSync } = require("child_process"), fs = require("fs");
+          const sh = (c) => execSync(c, { encoding: "utf8" }).trim();
+          const vers = JSON.parse(sh("npm view capacitor-nodejs versions --json"));
+          const ver = vers[vers.length - 1];
+          const peer = JSON.parse(sh(`npm view capacitor-nodejs@${ver} peerDependencies --json`) || "{}");
+          const majors = (peer["@capacitor/core"] || "^7.0.0").match(/\d+/g).map(Number);
+          const m = Math.max(...majors.filter((n) => n >= 5 && n <= 9), 7);
+          console.log("capacitor-nodejs", ver, "-> Capacitor", m);
+          fs.writeFileSync("package.json", JSON.stringify({ name: "zenith-hours-mobile", version: "4.0.0", private: true,
+            dependencies: { "@capacitor/android": "^" + m + ".0.0", "@capacitor/core": "^" + m + ".0.0", "capacitor-nodejs": ver },
+            devDependencies: { "@capacitor/cli": "^" + m + ".0.0" } }, null, 2));
+          EOS
+          node setup-deps.js
+          npm install --legacy-peer-deps
+          cd nodejs && npm install --omit=dev --no-audit && cd ..
+          find nodejs/node_modules -name "*.gz" -delete
+          cp -r nodejs www/nodejs
+          npx cap add android
+          python3 patch-android.py
+          npx cap sync android
+          cd android && chmod +x gradlew && ./gradlew assembleDebug --no-daemon
+      - name: APK yukle
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZenithHours-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk

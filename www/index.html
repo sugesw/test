@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8"><title>Zenith Hours</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d1a">
+<style>
+:root{--bg:#0b0d1a;--card:rgba(255,255,255,.06);--line:rgba(255,255,255,.1);--tx:#eef0ff;--mu:#8b90b3;--ac:#7c5cff;--ac2:#22d3ee;--ok:#34d399;--warn:#fbbf24;--err:#f87171;--sheet:#14172b;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f1f2fb;--card:rgba(255,255,255,.75);--line:rgba(20,20,60,.1);--tx:#171933;--mu:#62668a;--sheet:#fff;color-scheme:light}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+.blob{position:fixed;width:60vmax;height:60vmax;border-radius:50%;filter:blur(70px);opacity:.35;z-index:0;animation:fl 18s ease-in-out infinite alternate}
+.b1{background:var(--ac);top:-25vmax;left:-20vmax}.b2{background:var(--ac2);bottom:-30vmax;right:-25vmax;animation-delay:-6s;opacity:.25}
+@keyframes fl{to{transform:translate(8vmax,6vmax) scale(1.15)}}
+#app{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;max-width:560px;margin:auto}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 6px}
+.brand{font-weight:800;font-size:20px;letter-spacing:.3px;background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.pill{display:flex;gap:6px;align-items:center;padding:5px 12px;border-radius:99px;background:var(--card);border:1px solid var(--line);font-size:12px;color:var(--mu)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--mu)}.dot.on{background:var(--ok);animation:pu 1.6s infinite}
+@keyframes pu{0%{box-shadow:0 0 0 0 rgba(52,211,153,.6)}100%{box-shadow:0 0 0 9px transparent}}
+main{flex:1;position:relative;overflow:hidden}
+.view{position:absolute;inset:0;overflow-y:auto;padding:8px 16px 110px;display:none}
+.view.on{display:block;animation:vin .38s cubic-bezier(.2,.8,.2,1)}
+@keyframes vin{from{opacity:0;transform:translateX(var(--dx,30px)) scale(.98)}}
+.glass{background:var(--card);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.hero{display:flex;align-items:center;gap:18px;padding:18px;margin-bottom:14px}
+.ring{position:relative;width:104px;height:104px;flex:none}
+.ring svg{transform:rotate(-90deg)}.ring circle{fill:none;stroke-width:9;stroke-linecap:round}
+.ring .tr{stroke:var(--line)}.ring .pg{stroke:url(#g);stroke-dasharray:276.5;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:20px}
+.big{font-size:34px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.sub{color:var(--mu);font-size:13px;margin-top:6px}
+.card{padding:14px;margin-bottom:12px;animation:cin .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes cin{from{opacity:0;transform:translateY(24px) scale(.96)}}
+.card.out{animation:cout .3s forwards}@keyframes cout{to{opacity:0;transform:translateX(-60px) scale(.9)}}
+.row{display:flex;align-items:center;gap:12px}
+.av{width:44px;height:44px;border-radius:15px;display:grid;place-items:center;font-weight:800;font-size:18px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;flex:none}
+.nm{font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip{font-size:12px;padding:3px 10px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+.ok{color:var(--ok)}.warn{color:var(--warn)}.info{color:var(--ac2)}.mute{color:var(--mu)}.err{color:var(--err)}
+.tm{font-variant-numeric:tabular-nums;color:var(--mu);font-size:13px;margin:10px 0 8px}
+.games{display:flex;flex-wrap:wrap;gap:6px}
+.g{font-size:12px;padding:5px 10px;border-radius:12px;background:var(--card);border:1px solid var(--line);animation:cin .3s both}
+.g:active{transform:scale(.92)}
+.acts{display:flex;gap:8px;margin-top:12px}
+button{font:inherit;color:inherit;border:0;cursor:pointer;transition:transform .15s,opacity .2s}
+button:active{transform:scale(.94)}
+.btn{flex:1;padding:10px;border-radius:14px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:13px}
+.btn.pri{background:linear-gradient(135deg,var(--ac),#5b8cff);border:0;color:#fff;box-shadow:0 8px 24px -8px var(--ac)}
+.btn.dng{color:var(--err)}
+.fab{position:fixed;right:max(18px,calc(50% - 262px));bottom:calc(86px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:20px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-size:30px;box-shadow:0 12px 30px -8px var(--ac);z-index:5;animation:cin .6s .2s both}
+nav{position:relative;display:flex;margin:0 14px 12px;padding:6px;border-radius:24px;z-index:6}
+nav button{flex:1;padding:10px 0;background:none;font-size:13px;font-weight:600;color:var(--mu);position:relative;z-index:1;transition:color .25s}
+nav button.on{color:var(--tx)}
+#ind{position:absolute;top:6px;bottom:6px;left:6px;width:calc((100% - 12px)/3);border-radius:18px;background:linear-gradient(135deg,rgba(124,92,255,.4),rgba(34,211,238,.25));transition:transform .4s cubic-bezier(.3,1.3,.5,1)}
+.empty{text-align:center;padding:50px 20px;color:var(--mu)}.empty i{display:block;font-size:56px;font-style:normal;animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-12px)}}
+.log{display:flex;gap:10px;padding:10px 4px;border-bottom:1px solid var(--line);font-size:13px;animation:cin .3s both}.log small{color:var(--mu);display:block}
+#bd{position:fixed;inset:0;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .3s;z-index:20}
+#bd.on{opacity:1;pointer-events:auto}
+#sheet{position:fixed;left:0;right:0;bottom:0;max-width:560px;margin:auto;background:var(--sheet);border-radius:28px 28px 0 0;padding:10px 18px calc(22px + env(safe-area-inset-bottom,0px));z-index:21;transform:translateY(105%);transition:transform .42s cubic-bezier(.2,.9,.25,1);max-height:88%;overflow-y:auto;border:1px solid var(--line)}
+#sheet.on{transform:none}
+#sheet::before{content:"";display:block;width:42px;height:4px;border-radius:9px;background:var(--line);margin:0 auto 14px}
+h3{margin:0 0 12px}
+input,textarea{width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--tx);font:inherit;margin-bottom:10px;outline:0}
+input:focus,textarea:focus{border-color:var(--ac)}
+.seg{display:flex;gap:6px;margin-bottom:14px}.seg button{flex:1;padding:9px;border-radius:12px;background:var(--card);font-size:13px;font-weight:600;color:var(--mu)}.seg button.on{background:var(--ac);color:#fff}
+.qr{display:grid;place-items:center;min-height:240px;text-align:center;color:var(--mu)}.qr img{width:240px;height:240px;border-radius:18px;background:#fff;padding:8px;animation:cin .4s both}
+.res{padding:11px 4px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px}.res:active{background:var(--card)}
+#toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translate(-50%,-90px);padding:11px 18px;border-radius:16px;background:var(--sheet);border:1px solid var(--line);z-index:40;transition:transform .45s cubic-bezier(.3,1.4,.5,1);max-width:90%;font-size:14px}
+#toast.on{transform:translate(-50%,0)}
+.set{display:flex;align-items:center;gap:12px;padding:14px;margin-bottom:10px}.set div{flex:1}.set small{color:var(--mu);display:block}
+</style></head><body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div id="app">
+<header><span class="brand">⚡ Zenith Hours</span><span class="pill"><i class="dot" id="dot"></i><span id="pill">Bağlanıyor</span></span></header>
+<main>
+<section class="view on" id="v-acc">
+<div class="glass hero"><div class="ring"><svg width="104" height="104"><defs><linearGradient id="g"><stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><circle class="tr" cx="52" cy="52" r="44"/><circle class="pg" id="pg" cx="52" cy="52" r="44" stroke-dashoffset="276.5"/></svg><b id="rn">0/0</b></div>
+<div><div class="big" id="hrs">0.0</div><div class="sub">toplam oyun saati kasıldı</div><div class="sub" id="meta"></div></div></div>
+<div id="list"></div></section>
+<section class="view" id="v-log"><div id="logs"></div></section>
+<section class="view" id="v-set">
+<div class="glass set"><div><b>Arka planda çalış</b><small>Bildirim çubuğunda sabit servis, uygulama kapansa da kasar</small></div><button class="btn pri" style="flex:none" onclick="SV('start')">Aç</button></div>
+<div class="glass set"><div><b>Pil kısıtlamasını kaldır</b><small>Üretici “pil tasarrufu” servisi öldürmesin</small></div><button class="btn" style="flex:none" onclick="SV('battery')">Ayarla</button></div>
+<div class="glass set"><div><b>Tüm hesapları duraklat</b><small>Hepsini tek dokunuşla durdur / başlat</small></div><button class="btn" style="flex:none" id="pa">Duraklat</button></div>
+<p class="sub" style="text-align:center;margin-top:24px">Zenith Hours Mobil 4.0 · Sugesw / Exufo</p></section>
+</main>
+<button class="fab" id="fab" aria-label="Hesap ekle">＋</button>
+<nav class="glass"><i id="ind"></i><button class="on" data-t="0">🎮 Hesaplar</button><button data-t="1">📜 Günlük</button><button data-t="2">⚙️ Ayarlar</button></nav>
+</div>
+<div id="bd"></div><div id="sheet"></div><div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const vib=()=>navigator.vibrate&&navigator.vibrate(12);
+const ST={idling:["Kasıyor","ok"],paused:["Başka yerde oyun var","warn"],connecting:["Bağlanıyor","info"],reconnecting:["Yeniden bağlanıyor","info"],waiting:["Bekliyor","warn"],empty:["Oyun yok","mute"],stopped:["Duraklatıldı","mute"]};
+let S={accounts:[],totalGameHours:0,idling:0,allPaused:false},names={730:"Counter-Strike 2",570:"Dota 2",440:"Team Fortress 2",271590:"Grand Theft Auto V",578080:"PUBG: BATTLEGROUNDS",945360:"Among Us"},logs=[],shown=0,tab=0;
+const pad=n=>String(n).padStart(2,"0"),fmt=ms=>{const s=Math.floor(ms/1000);return Math.floor(s/3600)+"s "+pad(Math.floor(s%3600/60))+"dk "+pad(s%60)+"sn"};
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("on"),2600)}
+
+/* ── Köprü: telefonda Node motoruna, tarayıcıda demo motoruna bağlanır ── */
+const P=window.Capacitor&&Capacitor.Plugins,NJ=P&&P.CapacitorNodeJS;
+let rid=0,pend={},ev={};
+function emit(n,d){(ev[n]||[]).forEach(f=>f(d))}
+function on(n,f){(ev[n]=ev[n]||[]).push(f)}
+function call(op,a){
+  if(!NJ)return mock(op,a||{});
+  return new Promise((ok,no)=>{const id=++rid;pend[id]={ok,no};NJ.send({eventName:"cmd",args:[{rid:id,op,a}]});setTimeout(()=>{if(pend[id]){delete pend[id];no(new Error("Zaman aşımı"))}},30000)})
+}
+async function SV(m){try{if(!P||!P.ZenithService)return toast("Bu özellik sadece telefonda çalışır");await P.ZenithService[m]();toast(m==="start"?"Arka plan servisi açık ✓":"Ayar ekranı açıldı")}catch(e){toast(e.message)}}
+async function boot(){
+  if(NJ){
+    await NJ.whenReady();
+    NJ.addListener("res",e=>{const r=(e.args||[])[0],p=r&&pend[r.rid];if(p){delete pend[r.rid];r.ok?p.ok(r.data):p.no(new Error(r.error))}});
+    ["snap","log","guard","qr","names"].forEach(n=>NJ.addListener(n,e=>emit(n,(e.args||[])[0])));
+    if(P.ZenithService)P.ZenithService.start().catch(()=>{});
+  }else mockInit();
+  on("snap",s=>{S=s;render()});on("log",l=>{logs.push(l);if(tab==1)renderLogs()});on("names",n=>{names=Object.assign(names,n);shown=0});
+  on("guard",openGuard);
+  try{const h=await call("hello");if(h){names=Object.assign(names,h.names);logs=h.history||[]}}catch(_){}
+}
+
+/* ── Ekran çizimi ── */
+let hv=0;
+function render(){
+  const a=S.accounts;
+  $("#dot").className="dot"+(S.idling?" on":"");$("#pill").textContent=S.idling?S.idling+" hesap kasıyor":"Beklemede";
+  $("#rn").textContent=S.idling+"/"+a.length;$("#pg").style.strokeDashoffset=276.5*(1-(a.length?S.idling/a.length:0));
+  $("#meta").textContent=a.length+" hesap · "+a.reduce((n,x)=>n+x.games.length,0)+" oyun";
+  $("#pa").textContent=S.allPaused?"Başlat":"Duraklat";
+  const L=$("#list");
+  if(!a.length&&!L.querySelector(".empty"))L.innerHTML='<div class="empty"><i>🚀</i><b>Henüz hesap yok</b><br>Sağ alttaki ＋ ile Steam hesabını ekle</div>';
+  if(a.length){const e=L.querySelector(".empty");if(e)e.remove()}
+  L.querySelectorAll(".card").forEach(c=>{if(!a.find(x=>x.id===c.dataset.id)&&!c.classList.contains("out")){c.classList.add("out");setTimeout(()=>c.remove(),300)}});
+  a.forEach((x,i)=>{
+    let c=L.querySelector('.card[data-id="'+x.id+'"]');
+    if(!c){c=document.createElement("div");c.className="card glass";c.dataset.id=x.id;c.style.animationDelay=i*70+"ms";
+      c.innerHTML='<div class="row"><div class="av"></div><div class="nm"></div><span class="chip"></span></div><div class="tm"></div><div class="games"></div><div class="acts"><button class="btn" data-a="t"></button><button class="btn pri" data-a="g">＋ Oyun</button><button class="btn dng" data-a="d">Sil</button></div>';L.appendChild(c)}
+    const [t,k]=ST[x.status]||[x.status,"mute"];
+    c.querySelector(".av").textContent=(x.label||"?")[0].toUpperCase();c.querySelector(".nm").textContent=x.label;
+    const ch=c.querySelector(".chip");ch.textContent=t+(x.retryIn?" ("+Math.ceil(x.retryIn/1000)+"sn)":"");ch.className="chip "+k;
+    c.querySelector(".tm").textContent="⏱ "+fmt(x.idleMs)+"  ·  "+x.gameHours.toFixed(1)+" oyun-saati";
+    c.querySelector('[data-a="t"]').textContent=x.paused?"▶ Devam":"⏸ Duraklat";
+    const sig=x.games.join()+Object.keys(names).length,gb=c.querySelector(".games");
+    if(gb.dataset.s!==sig){gb.dataset.s=sig;gb.innerHTML=x.games.length?x.games.map(g=>'<span class="g" data-g="'+g+'">'+esc(names[g]||"AppID "+g)+" ✕</span>").join(""):'<span class="sub">Oyun eklenmedi</span>'}
+  });
+  hv+=(S.totalGameHours-hv)*.15;$("#hrs").textContent=hv.toFixed(1);
+}
+setInterval(()=>{hv+=(S.totalGameHours-hv)*.15;$("#hrs").textContent=hv.toFixed(2).slice(0,-1)},60);
+$("#list").onclick=async e=>{
+  const c=e.target.closest(".card");if(!c)return;const id=c.dataset.id,g=e.target.closest("[data-g]"),b=e.target.closest("[data-a]");vib();
+  try{if(g)await call("games-remove",{id,ids:[+g.dataset.g]});
+  else if(b){const a=b.dataset.a;if(a==="t")await call("toggle",{id});if(a==="g")openGames(id);if(a==="d"&&confirm("Bu hesap silinsin mi?"))await call("remove",{id})}}catch(x){toast(x.message)}
+};
+$("#pa").onclick=()=>call("pause-all",{flag:!S.allPaused});
+function renderLogs(){
+  const col={ok:"ok",warn:"warn",err:"err"};
+  $("#logs").innerHTML=logs.slice(-100).reverse().map(l=>'<div class="log"><span class="'+(col[l.level]||"info")+'">●</span><div>'+esc(l.msg)+'<small>'+(l.account?esc(l.account)+" · ":"")+new Date(l.t).toLocaleTimeString("tr-TR")+'</small></div></div>').join("")||'<div class="empty"><i>📜</i>Henüz kayıt yok</div>';
+}
+
+/* ── Sekmeler ── */
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
+  const n=+b.dataset.t;if(n===tab)return;vib();
+  const v=document.querySelectorAll(".view");v[n].style.setProperty("--dx",(n>tab?30:-30)+"px");
+  v[tab].classList.remove("on");v[n].classList.add("on");tab=n;
+  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
+  $("#ind").style.transform="translateX("+n*100+"%)";$("#fab").style.display=n===0?"":"none";if(n===1)renderLogs();
+});
+
+/* ── Alt paneller ── */
+function sheet(html){$("#sheet").innerHTML=html;$("#bd").classList.add("on");requestAnimationFrame(()=>$("#sheet").classList.add("on"))}
+function closeSheet(){$("#sheet").classList.remove("on");$("#bd").classList.remove("on");call("qr-cancel").catch(()=>{})}
+$("#bd").onclick=closeSheet;
+const wrap=f=>async e=>{try{await f(e)}catch(x){toast(x.message)}};
+$("#fab").onclick=()=>{vib();openAdd(0)};
+function openAdd(m){
+  sheet('<h3>Hesap ekle</h3><div class="seg"><button class="'+(m==0?"on":"")+'" data-m="0">QR</button><button class="'+(m==1?"on":"")+'" data-m="1">Token</button><button class="'+(m==2?"on":"")+'" data-m="2">Şifre</button></div><div id="body"></div>');
+  $("#sheet .seg").onclick=e=>{const b=e.target.closest("[data-m]");if(b){call("qr-cancel").catch(()=>{});openAdd(+b.dataset.m)}};
+  const B=$("#body");
+  if(m==0){B.innerHTML='<div class="qr" id="qr">QR hazırlanıyor…</div><p class="sub" style="text-align:center">Steam mobil uygulaması → Steam Guard → QR tara</p>';
+    on("qr",qrEv);call("qr-start").catch(e=>toast(e.message))}
+  if(m==1){B.innerHTML='<textarea id="tk" rows="4" placeholder="Refresh token (eyJ…)"></textarea><button class="btn pri" style="width:100%" id="ok">Ekle</button>';
+    $("#ok").onclick=wrap(async()=>{await call("add-token",{token:$("#tk").value});closeSheet();toast("Hesap eklendi ✓")})}
+  if(m==2){B.innerHTML='<input id="u" placeholder="Kullanıcı adı" autocapitalize="off"><input id="p" type="password" placeholder="Şifre"><button class="btn pri" style="width:100%" id="ok">Giriş yap</button>';
+    $("#ok").onclick=wrap(async()=>{await call("add-cred",{user:$("#u").value,pass:$("#p").value});closeSheet();toast("Giriş yapılıyor…")})}
+}
+function qrEv(p){const q=$("#qr");if(!q)return;
+  if(p.state=="ready")q.innerHTML='<img src="'+p.dataUrl+'" alt="QR">';
+  else if(p.state=="scanned")q.innerHTML="✅ Okundu! Telefonda onayla…";
+  else if(p.state=="refreshing")q.innerHTML="QR yenileniyor…";
+  else if(p.state=="done"){closeSheet();toast("Hesap eklendi ✓")}
+  else if(p.state=="error")q.innerHTML='<span class="err">'+esc(p.message)+"</span>"}
+function openGuard(g){
+  sheet('<h3>🔐 Steam Guard</h3><p class="sub">'+esc(g.label)+(g.domain?" · kod e-postana ("+esc(g.domain)+") gitti":" · mobil uygulamadaki kodu gir")+(g.wrong?'<br><span class="err">Önceki kod yanlıştı</span>':"")+'</p><input id="cd" placeholder="Kod" autocapitalize="characters"><div class="acts"><button class="btn dng" id="no">İptal</button><button class="btn pri" id="ok">Onayla</button></div>');
+  $("#ok").onclick=wrap(async()=>{await call("guard",{id:g.id,code:$("#cd").value});closeSheet()});
+  $("#no").onclick=wrap(async()=>{await call("guard-cancel",{id:g.id});closeSheet()})}
+function openGames(id){
+  sheet('<h3>Oyun ekle</h3><input id="q" placeholder="Oyun adı ya da AppID ara…"><div id="rs"></div>');
+  let t;$("#q").oninput=e=>{clearTimeout(t);const v=e.target.value.trim();t=setTimeout(async()=>{
+    let r=[];if(/^\d+$/.test(v))r.push({id:+v,name:names[v]||"AppID "+v});
+    if(v.length>1)try{r=r.concat(await call("search",{term:v}))}catch(_){}
+    $("#rs").innerHTML=r.map(x=>'<div class="res" data-i="'+x.id+'"><span>'+esc(x.name)+'</span><span class="mute">'+x.id+"</span></div>").join("")},350)};
+  $("#rs").onclick=wrap(async e=>{const r=e.target.closest("[data-i]");if(!r)return;vib();
+    const res=await call("games-add",{id,ids:[+r.dataset.i]});toast(res.added.length?"Eklendi ✓":res.full.length?"En fazla 32 oyun":"Zaten ekli");if(res.added.length)closeSheet()})}
+
+/* ── Demo motoru (yalnızca tarayıcı önizlemesi için) ── */
+let M;
+function mockInit(){
+  M=[{id:"a1",label:"sugesw",status:"idling",idleMs:7384000,gh:12.4,games:[730,570,440],paused:false},{id:"a2",label:"exufo_main",status:"paused",idleMs:3600000,gh:4.2,games:[271590],paused:false},{id:"a3",label:"yedek_hesap",status:"waiting",idleMs:0,gh:0,games:[],paused:false,retry:40000}];
+  setInterval(()=>{M.forEach(a=>{if(a.status=="idling"){a.idleMs+=1000;a.gh+=a.games.length/3600}if(a.retry)a.retry=Math.max(0,a.retry-1000)});
+    const ac=M.map(a=>({id:a.id,label:a.label,status:a.paused?"stopped":a.status,retryIn:a.retry||0,idleMs:a.idleMs,gameHours:a.gh,games:a.games,paused:a.paused}));
+    emit("snap",{accounts:ac,totalGameHours:M.reduce((s,a)=>s+a.gh,0),idling:ac.filter(a=>a.status=="idling").length,allPaused:ac.length>0&&ac.every(a=>a.paused)})},1000);
+  emit("log",{t:Date.now(),level:"ok",msg:"3 oyun için saat/kart kasılıyor.",account:"sugesw"});
+}
+async function mock(op,a){
+  const f=M&&M.find(x=>x.id==a.id);
+  if(op=="toggle")f.paused=!f.paused;
+  if(op=="remove")M=M.filter(x=>x!=f);
+  if(op=="pause-all"){M.forEach(x=>x.paused=a.flag)}
+  if(op=="games-add"){const r={added:[],dup:[],full:[]};a.ids.forEach(i=>f.games.includes(i)?r.dup.push(i):(f.games.push(i),r.added.push(i),f.status=f.status=="waiting"?"idling":f.status));return r}
+  if(op=="games-remove")f.games=f.games.filter(g=>!a.ids.includes(g));
+  if(op=="search")return Object.entries(names).filter(([i,n])=>n.toLowerCase().includes(a.term.toLowerCase())).map(([i,n])=>({id:+i,name:n}));
+  if(op=="add-token"||op=="add-cred")M.push({id:"a"+Date.now(),label:a.user||"yeni_hesap",status:"idling",idleMs:0,gh:0,games:[],paused:false});
+  if(op=="qr-start")setTimeout(()=>emit("qr",{state:"ready",dataUrl:"data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 9">'+[...Array(81)].map((_,i)=>(i*7+i%5)%3?'<rect x="'+i%9+'" y="'+Math.floor(i/9)+'" width="1" height="1"/>':"").join("")+"</svg>")}),600);
+  return {};
+}
+boot();
+</script></body></html>

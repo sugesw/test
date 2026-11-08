@@ -1,0 +1,2 @@
+{ "name": "zenith-node", "version": "4.0.0", "main": "main.js",
+  "dependencies": { "qrcode": "^1.5.4", "steam-session": "^1.7.0", "steam-user": "^5.0.0" } }

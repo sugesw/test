@@ -1,0 +1,3 @@
+{ "appId": "com.sugesw.zenithhours", "appName": "Zenith Hours", "webDir": "www",
+  "backgroundColor": "#0b0d1a",
+  "plugins": { "CapacitorNodeJS": { "nodeDir": "nodejs", "startMode": "auto" } } }
